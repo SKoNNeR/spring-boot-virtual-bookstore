@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import dev.fjlamela.springcore.domain.Book;
 import dev.fjlamela.springcore.repository.BookRepository;
+import dev.fjlamela.springcore.service.exception.BookNotFoundException;
 import dev.fjlamela.springcore.service.exception.DuplicateBookException;
 
 @Service
@@ -31,5 +32,9 @@ public class BookService {
 	
 	public List<Book> listBooks(){
 		return bookRepository.findAll();
+	}
+	
+	public Book getBookByIsbn(String isbn) {
+		return bookRepository.findByIsbn(isbn).orElseThrow(() -> new BookNotFoundException("ERROR: Book not found"));
 	}
 }
