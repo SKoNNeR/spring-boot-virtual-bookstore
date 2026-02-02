@@ -1,5 +1,6 @@
 package dev.fjlamela.springcore.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import dev.fjlamela.springcore.controller.dto.BookResponse;
 import dev.fjlamela.springcore.controller.dto.CreateBookRequest;
@@ -36,7 +38,7 @@ public class BookController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> createBook(@RequestBody CreateBookRequest request) {
+	public ResponseEntity<BookResponse> createBook(@RequestBody CreateBookRequest request) {
 		String title= request.getTitle();
 		String author= request.getAuthor();
 		String isbn= request.getIsbn();
@@ -46,7 +48,9 @@ public class BookController {
 		
 		bookService.addBook(newBook);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{isbn}").buildAndExpand(newBook.getIsbn()).toUri(); 
+				
+		return ResponseEntity.created(location).body(new BookResponse(newBook.getTitle(), newBook.getAuthor(), newBook.getIsbn(), newBook.getPublicationYear()));
 	}
 
 }
