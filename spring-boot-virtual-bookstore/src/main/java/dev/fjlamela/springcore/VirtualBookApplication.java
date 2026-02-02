@@ -9,6 +9,7 @@ public class VirtualBookApplication {
 
 		SpringApplication.run(VirtualBookApplication.class, args);
 		
+		
 	}
 }
 	
