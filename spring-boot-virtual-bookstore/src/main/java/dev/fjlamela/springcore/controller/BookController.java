@@ -2,6 +2,8 @@ package dev.fjlamela.springcore.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +29,7 @@ public class BookController {
 	}
 	
 	@PostMapping
-	public void createBook(@RequestBody CreateBookRequest request) {
+	public ResponseEntity<Void> createBook(@RequestBody CreateBookRequest request) {
 		String title= request.getTitle();
 		String author= request.getAuthor();
 		String isbn= request.getIsbn();
@@ -36,6 +38,8 @@ public class BookController {
 		Book newBook= new Book(title, author, isbn, publicationYear);
 		
 		bookService.addBook(newBook);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 }
