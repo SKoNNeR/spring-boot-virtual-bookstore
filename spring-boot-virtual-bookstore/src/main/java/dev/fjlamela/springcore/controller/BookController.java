@@ -1,5 +1,6 @@
 package dev.fjlamela.springcore.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.fjlamela.springcore.controller.dto.BookResponse;
 import dev.fjlamela.springcore.controller.dto.CreateBookRequest;
 import dev.fjlamela.springcore.domain.Book;
 import dev.fjlamela.springcore.service.BookService;
@@ -24,8 +26,13 @@ public class BookController {
 	}
 	
 	@GetMapping
-	public List<Book> getBooks(){
-		return bookService.listBooks();
+	public List<BookResponse> getBooks(){
+		List<Book> bookList= bookService.listBooks();
+		List<BookResponse> bookResponse= new ArrayList<>();
+		for (Book book: bookList) {
+			bookResponse.add(new BookResponse(book.getTitle(), book.getAuthor(), book.getIsbn(), book.getPublicationYear()));
+		}
+		return bookResponse;
 	}
 	
 	@PostMapping
