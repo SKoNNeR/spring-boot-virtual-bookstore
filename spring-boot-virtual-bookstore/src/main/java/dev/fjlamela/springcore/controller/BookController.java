@@ -3,9 +3,12 @@ package dev.fjlamela.springcore.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.fjlamela.springcore.controller.dto.CreateBookRequest;
 import dev.fjlamela.springcore.domain.Book;
 import dev.fjlamela.springcore.service.BookService;
 
@@ -21,6 +24,18 @@ public class BookController {
 	@GetMapping
 	public List<Book> getBooks(){
 		return bookService.listBooks();
+	}
+	
+	@PostMapping
+	public void createBook(@RequestBody CreateBookRequest request) {
+		String title= request.getTitle();
+		String author= request.getAuthor();
+		String isbn= request.getIsbn();
+		int publicationYear= request.getPublicationYear();
+		
+		Book newBook= new Book(title, author, isbn, publicationYear);
+		
+		bookService.addBook(newBook);
 	}
 
 }
