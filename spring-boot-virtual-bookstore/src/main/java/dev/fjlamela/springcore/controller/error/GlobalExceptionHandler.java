@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.fjlamela.springcore.service.exception.BookNotFoundException;
 import dev.fjlamela.springcore.service.exception.DuplicateBookException;
 
 @RestControllerAdvice
@@ -18,5 +19,10 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(DuplicateBookException.class) 
 	public ResponseEntity<ApiError> duplicatedBook(DuplicateBookException ex){
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), ex.getMessage()));
+	}
+	
+	@ExceptionHandler(BookNotFoundException.class)
+	public ResponseEntity<ApiError> bookNotFound(BookNotFoundException ex){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage()));
 	}
 }
