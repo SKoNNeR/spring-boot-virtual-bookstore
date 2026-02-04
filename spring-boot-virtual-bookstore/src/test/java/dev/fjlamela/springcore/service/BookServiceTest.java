@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import dev.fjlamela.springcore.domain.Book;
 import dev.fjlamela.springcore.repository.inmemory.InMemoryBookRepository;
+import dev.fjlamela.springcore.service.exception.BookNotFoundException;
 import dev.fjlamela.springcore.service.exception.DuplicateBookException;
 
 public class BookServiceTest {
@@ -38,7 +39,12 @@ public class BookServiceTest {
 	
 	@Test
 	public void getBookByIsbn_shouldThrowWhenNotFound() {
+		InMemoryBookRepository memBook= new InMemoryBookRepository();
+		BookService bookService= new BookService(memBook);
 		
+		Assertions.assertThrows(BookNotFoundException.class, ()-> {
+			bookService.getBookByIsbn("0");
+		});
 	}
 	
 }
