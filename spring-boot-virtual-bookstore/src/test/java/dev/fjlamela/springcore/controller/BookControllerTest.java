@@ -54,4 +54,14 @@ public class BookControllerTest {
 				.andExpect(jsonPath("$[0].publicationYear").value(1952));
 
 	}
+
+	@Test
+	public void getBookByIsbn_shouldReturnBook() throws Exception {
+		Book book = new Book("The Old Man and the Sea", "Ernest Hemingway", "978-0684801223", 1952);
+		when(bookService.getBookByIsbn("978-0684801223")).thenReturn(book);
+
+		mockMvc.perform(get("/books/978-0684801223")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.title").value("The Old Man and the Sea"))
+				.andExpect(jsonPath("$.publicationYear").value(1952));
+	}
 }
