@@ -1,6 +1,7 @@
 package dev.fjlamela.springcore.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,11 +24,19 @@ public class BookControllerTest {
 	@MockBean
 	private BookService bookService;
 	
-	
 	@Test
 	public void getBooks_shouldReturnOk() throws Exception {
 		when(bookService.listBooks()).thenReturn(List.of());
 		mockMvc.perform(get("/books")).andExpect(status().isOk());
 	}
 	
+	@Test
+	public void getBook_shouldReturnEmptyList() throws Exception {
+		when(bookService.listBooks()).thenReturn(List.of());
+		
+		mockMvc.perform(get("/books"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").isArray())
+			.andExpect(jsonPath("$").isEmpty());
+	}	
 }
