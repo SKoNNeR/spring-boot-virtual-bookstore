@@ -1,7 +1,6 @@
 package dev.fjlamela.springcore.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -13,12 +12,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
+import dev.fjlamela.springcore.controller.error.GlobalExceptionHandler;
 import dev.fjlamela.springcore.domain.Book;
 import dev.fjlamela.springcore.service.BookService;
+import dev.fjlamela.springcore.service.exception.BookNotFoundException;
 
 @WebMvcTest(BookController.class)
+@Import(GlobalExceptionHandler.class)
 public class BookControllerTest {
 
 	@Autowired
@@ -63,5 +66,11 @@ public class BookControllerTest {
 		mockMvc.perform(get("/books/978-0684801223")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.title").value("The Old Man and the Sea"))
 				.andExpect(jsonPath("$.publicationYear").value(1952));
+	}
+
+	@Test
+	public void getBookByIsbn_shouldReturn404WhenNotFound() throws Exception {
+		when(bookService.getBookByIsbn("1881133449911")).thenThrow(new BookNotFoundException("TEST: Book not found"));
+		mockMvc.perform(get("/books/1881133449911")).andExpect(status().isNotFound());
 	}
 }
